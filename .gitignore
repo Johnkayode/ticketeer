@@ -1,0 +1,11 @@
+.env
+*.env
+.venv
+db.sqlite3
+__pycache__/
+sensitive/
+/.idea
+/.vscode
+/terraform
+/nginx
+media/
