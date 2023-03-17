@@ -27,6 +27,8 @@ class EventView(ModelViewSet):
             serializer = self.get_serializer(data=request.data)
             serializer.is_valid(raise_exception=True)
             _ticket: EventTicket = serializer.save(event=instance)
+            _ticket.generate_qrcode()
+            _ticket.generate_ticket_pdf()
 
             headers = self.get_success_headers(serializer.data)
             return Response(

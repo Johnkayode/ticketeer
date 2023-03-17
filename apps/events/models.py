@@ -12,6 +12,7 @@ class Event(BaseModel):
     name = models.CharField(_("name"), max_length=150)
     from_date = models.DateTimeField(_("from_date"))
     to_date = models.DateTimeField(_("to_date"))
+    description = models.TextField(null=True, blank=True)
     venue = models.TextField(null=True, blank=True)
     max_participants = models.PositiveIntegerField(default=2)
 

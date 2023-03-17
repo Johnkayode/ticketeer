@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticket</title>
+</head>
+<body>
+    <div>
+        <p>Reference: {{instance.reference}}</p>
+
+        <h2>{{instance.event.name}}</h2>
+        <p>{{instance.event.description}}</p>
+        <p>FREE</p>
+    </div>
+    <div>
+        <p>Venue: {{instance.event.venue}}</p>
+        <p>Date: {{instance.event.from_date}} - {{instance.event.to_date}}</p>
+
+    </div>
+    <div>
+        <img src="{{instance.qrcode.url}}" alt="{{instance.qrcode.url}}">
+    </div>
+
+    <p>Ticketeer</p>
+</body>
+</html>
