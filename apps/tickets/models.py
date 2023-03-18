@@ -8,6 +8,7 @@ from apps.tickets.utils import generate_ticket_reference
 from base.models import BaseModel
 
 from io import BytesIO
+from typing import Optional
 from weasyprint import HTML
 import qrcode
 
@@ -23,13 +24,33 @@ class EventTicket(BaseModel):
     email = models.EmailField(_("email"))
     qrcode = models.ImageField(_("qr code"), upload_to=_qrcode_directory_path)
     pdf = models.FileField(upload_to=_pdf_directory_path, null=True, blank=True)
-    is_valid = models.BooleanField(default=True)
     is_expired = models.BooleanField(default=False)
 
 
+    @classmethod
+    def verify_ticket(cls, data: str, event: Event) -> Optional["EventTicket"]:
+        """ Verify ticket """
+        data = data.split("_")
+        try:
+            _ticket = cls.objects.get(
+                event=event,
+                uid=data[0], 
+                reference=data[1], 
+                is_expired=False
+            )
+            _ticket.is_expired = True
+            _ticket.save(update_fields=["is_expired"])
+            return _ticket
+        except cls.DoesNotExist:
+            # TODO: log error
+            return None
+        except Exception as err:
+            # TODO: log error
+            return None
+
     def generate_qrcode(self) -> None:
-        # generate qrcode using reference and uid
-        _data = str(self.uid) + self.reference
+        """ generate qrcode using reference and uid """
+        _data = "".join([str(self.uid), "_", self.reference])
         _qr_code = qrcode.make(_data)
 
         _file_name = f'{self.reference}.png'
@@ -38,6 +59,7 @@ class EventTicket(BaseModel):
         self.qrcode.save(_file_name, File(_stream), save=True)
 
     def generate_ticket_pdf(self) -> None:
+        """ generate ticket pdf and attach qrcode """
         template = "tickets/pdf.html"
         context = {"instance": self}
         html_string = render_to_string(template, context)

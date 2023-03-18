@@ -1,13 +1,13 @@
 from django.urls import path
 
-from apps.tickets.views import EventTicketView
+from apps.tickets.views import VerifyEventTicketView
 
 
 
 urlpatterns = [
     path(
-        "events/<slug:uid>/ticket/",
-        EventTicketView.as_view(),
-        name="create-event-ticket",
+        "tickets/verify/",
+        VerifyEventTicketView.as_view(),
+        name="verify-event-ticket",
     ),
 ] 

@@ -15,12 +15,20 @@ class EventTicketSerializer(serializers.ModelSerializer):
             "name",
             "email",
             "qrcode",
+            "pdf",
             "created_at",
+            "is_expired",
         )
         read_only_fields = (
             "uid",
             "event",
             "reference",
             "qrcode",
+            "pdf",
             "created_at",
+            "is_expired",
         )
+
+class VerifyEventTicketSerializer(serializers.Serializer):
+
+    qrcode = serializers.ImageField()
