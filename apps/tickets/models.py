@@ -56,6 +56,8 @@ class EventTicket(BaseModel):
         _file_name = f'{self.reference}.png'
         _stream = BytesIO()
         _qr_code.save(_stream, 'PNG')
+        # reread the file for cloudinary
+        _stream.seek(0)
         self.qrcode.save(_file_name, File(_stream), save=True)
 
     def generate_ticket_pdf(self) -> None:

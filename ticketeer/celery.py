@@ -3,7 +3,11 @@ from typing import Optional
 
 from celery import Celery
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "ticketeer.settings.develop")
+
+setting_module: Optional[str] = os.environ.get("DJANGO_SETTINGS_MODULE")
+if not setting_module:
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ticketeer.settings.develop')
+    
 app = Celery('ticketeer')
 
 # Using a string here means the worker doesn't have to serialize

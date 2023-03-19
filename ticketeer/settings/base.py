@@ -8,10 +8,10 @@ BASE_DIR = _BASE_DIR.parent
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-a*h9_p0f4z(35s!wt0h)m_nx6=(+vime869wi2d**65u9)m^ke'
+SECRET_KEY = config("SECRET_KEY", default="")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("APP_DEBUG", default=True)
 
 ALLOWED_HOSTS = []
 
@@ -24,10 +24,12 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
     'django.contrib.staticfiles',
 
     #thirdparty apps
     'rest_framework',
+    'cloudinary',
 
     #local apps
     'apps.events',
@@ -66,16 +68,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ticketeer.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 
 # Password validation
