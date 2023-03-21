@@ -40,13 +40,13 @@ class EventTicket(BaseModel):
             )
             _ticket.is_expired = True
             _ticket.save(update_fields=["is_expired"])
-            return _ticket
+            return _ticket, "Ticket verified successfully"
         except cls.DoesNotExist:
             # TODO: log error
-            return None
+            return None, "Ticket does not exist or has expired."
         except Exception as err:
             # TODO: log error
-            return None
+            return None, err
 
     def generate_qrcode(self) -> None:
         """ generate qrcode using reference and uid """

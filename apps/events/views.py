@@ -67,25 +67,28 @@ class EventView(ModelViewSet):
         serializer.is_valid(raise_exception=True)
 
         _qrcode = serializer.validated_data["qrcode"]
-        data = get_data_from_qrcode(_qrcode)
-        _ticket = EventTicket.verify_ticket(data=data, event=instance)
-        if not _ticket:
-            return Response(
-                {
-                    "status_code": status.HTTP_204_NO_CONTENT,
-                    "message": "Event Ticket could not be verified",
-                    "data": None
-                },
-                status.HTTP_204_NO_CONTENT
-            )
+        _data, msg = get_data_from_qrcode(_qrcode)
+        if _data is not None:   
+            _ticket, msg = EventTicket.verify_ticket(data=_data, event=instance)
+            if _ticket:
+                return Response(
+                    {
+                        "status_code": status.HTTP_200_OK,
+                        "message": msg,
+                        "data": EventTicketSerializer(_ticket).data
+                    },
+                    status.HTTP_200_OK,
+                )
+        
         return Response(
             {
-                "status_code": status.HTTP_200_OK,
-                "message": "Event Ticket verified successfully",
-                "data": EventTicketSerializer(_ticket).data
+                "status_code": status.HTTP_204_NO_CONTENT,
+                "message":msg,
+                "data": None
             },
-            status.HTTP_200_OK,
+            status.HTTP_204_NO_CONTENT
         )
+        
 
     def get_serializer_class(self):
         try:
