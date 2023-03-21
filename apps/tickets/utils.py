@@ -10,8 +10,11 @@ def generate_ticket_reference() -> str:
 def get_data_from_qrcode(qrcode) -> str:
     # use pyzbar to decode image
     qrcode = Image.open(qrcode)
-    decoded = pyzbar.decode(qrcode)
-    if not decoded:
-        return None, "Qrcode could not be decoded."
-    return decoded[0].data.decode('ascii'), "Qrcode decoded."
+    try:
+        decoded = pyzbar.decode(qrcode)
+        if not decoded:
+            return None, "Qrcode could not be decoded."
+        return decoded[0].data.decode('ascii'), "Qrcode decoded."
+    except Exception as err:
+        return None, err
 
