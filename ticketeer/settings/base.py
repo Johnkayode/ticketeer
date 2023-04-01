@@ -34,7 +34,14 @@ INSTALLED_APPS = [
     #local apps
     'apps.events',
     'apps.tickets',
+    'apps.accounts'
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -68,6 +75,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'ticketeer.wsgi.application'
 
+#AUTH
+AUTH_USER_MODEL = "accounts.User"
 
 
 # Password validation
