@@ -16,7 +16,6 @@ class RegisterApi(generics.GenericAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user: User = serializer.save()
-        print("User", user.password)
         return Response({
             "user": UserSerializer(user, context=self.get_serializer_context()).data,
             "message": "User Created Successfully. Now perform Login to get your token",
@@ -33,7 +32,6 @@ class LoginApi(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         email, password = serializer.data["email"], serializer.data["password"]
         user: User = User.objects.get(email=email)
-        print(user.password, password)
         if not user:
             return Response(data={"message": "Authentication failed."}, status=status.HTTP_400_BAD_REQUEST)
         if not user.check_password(password):
