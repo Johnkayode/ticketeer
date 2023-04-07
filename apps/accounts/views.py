@@ -1,9 +1,11 @@
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
+from rest_framework.request import Request
 from rest_framework.permissions import AllowAny
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth.hashers import make_password, check_password
+import uuid
 from .serializers import RegisterSerializer, UserSerializer, LoginSerializer, VerifySerializer, SendCodeSerializer
 from .models import User
 from .utils import generate_code
@@ -68,7 +70,7 @@ class VerifyAccountAPI(generics.GenericAPIView):
         return Response({"message": "Account verification successful."})
 
 
-# Verify account API
+# Send code API
 class SendCodeAPI(generics.GenericAPIView):
     permission_classes = (AllowAny,)
     serializer_class = SendCodeSerializer
@@ -92,6 +94,19 @@ class SendCodeAPI(generics.GenericAPIView):
 class FetchUsersAPI(generics.GenericAPIView):
     permission_classes = (AllowAny,)
 
-    def get(self, request, *args, **kwargs):
+    def get(self, request: Request, *args, **kwargs):
         users = User.objects.all()
         return Response({"users": UserSerializer(users, many=True, context=self.get_serializer_context()).data})
+
+
+# User by ID API
+class FetchUserAPI(generics.GenericAPIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request: Request, uid: uuid.UUID, *args, **kwargs):
+        try:
+            user_id = uuid.UUID(uid)
+        except:
+            return Response(data={"message": "Invalid UUID."}, status=status.HTTP_400_BAD_REQUEST)
+        user = User.objects.get(uid=user_id)
+        return Response({"user": UserSerializer(user, context=self.get_serializer_context()).data})
